@@ -1,6 +1,6 @@
 {
   "name": "astro-critical-css",
-  "description": "Critical integration for astro to inline above-the-fold css into HTML",
+  "description": "Critical css integration for astro to inline above-the-fold css into HTML",
   "repository": {
     "type": "git",
     "url": "https://github.com/rumaan/astro-critical-css.git"
