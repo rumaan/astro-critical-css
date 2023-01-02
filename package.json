@@ -12,11 +12,12 @@
   },
   "author": "Rumaan K <hey@rumaan.dev>",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "main": "./lib/dist/index.js",
+  "types": "./lib/dist/index.d.ts",
   "files": [
-    "lib/dist"
+    "./lib/dist/"
   ],
   "scripts": {
     "dev": "astro dev",
@@ -27,10 +28,10 @@
     "lib:build": "tsup-node"
   },
   "dependencies": {
-    "astro": "^1.8.0"
+    "astro": "^1.8.0",
+    "critical": "^5.0.4"
   },
   "devDependencies": {
-    "critical": "^5.0.4",
     "fast-glob": "^3.2.12",
     "tsup": "^6.5.0"
   },
@@ -39,5 +40,12 @@
     "critical css",
     "astro",
     "astro-integration"
-  ]
+  ],
+  "exports": {
+    ".": {
+      "import": "./lib/dist/index.js",
+      "require": "./lib/dist/index.cjs",
+      "types": "./lib/dist/index.d.ts"
+    }
+  }
 }
