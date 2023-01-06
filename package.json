@@ -12,7 +12,7 @@
   },
   "author": "Rumaan K <hey@rumaan.dev>",
   "type": "module",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "private": false,
   "main": "./lib/dist/index.js",
   "types": "./lib/dist/index.d.ts",
@@ -36,6 +36,7 @@
     "tsup": "^6.5.0"
   },
   "keywords": [
+    "astro-component",
     "css performance",
     "critical css",
     "astro",
@@ -43,9 +44,9 @@
   ],
   "exports": {
     ".": {
+      "types": "./lib/dist/index.d.ts",
       "import": "./lib/dist/index.js",
-      "require": "./lib/dist/index.cjs",
-      "types": "./lib/dist/index.d.ts"
+      "require": "./lib/dist/index.cjs"
     }
   }
 }
