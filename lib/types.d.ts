@@ -1,15 +1,15 @@
 declare module "critical" {
-  type GenerateFuncArgs = {
+  export type GenerateFuncArgs = {
     inline: boolean;
     base: string;
     src: string;
   };
 
-  type Result = {
+  export type Result = {
     css: string;
     html: string;
     uncritical: string;
   };
 
-  const generate: (options: GenerateFuncArgs) => Promise<Result>;
+  export const generate: (options: GenerateFuncArgs) => Promise<Result>;
 }
