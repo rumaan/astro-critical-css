@@ -26,7 +26,6 @@
     "lib:build": "tsup-node"
   },
   "dependencies": {
-    "@astrojs/vercel": "^3.3.0",
     "astro": "^2.4.4",
     "critical": "^5.1.1",
     "debug": "^4.3.7"
