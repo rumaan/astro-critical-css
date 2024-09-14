@@ -34,36 +34,31 @@ export default ({
         const startTime = Date.now();
         log("🪄 Starting: Inlining CSS in path %s", distPath);
         for await (const htmlPath of htmlPathsStream) {
-          const path = join(distPath, htmlPath.toString());
-          if (!silent) console.log("🧷 Inlining =>", path);
-          const initialSize = statSync(path).size;
+          const htmlFilePath = join(distPath, htmlPath.toString());
+          if (!silent) console.log("🧷 Inlining =>", htmlFilePath);
+          const initialSize = statSync(htmlFilePath).size;
           htmlInputSize += initialSize;
           fileCount++;
-          // Execute criticalCss' generate
+
           const results = await generate({
             inline: true,
-            src: path,
+            src: htmlFilePath,
             base: distPath,
             ...options,
           }).catch((err) => ({ error: err }));
 
+          checkError(results);
+
           let html = "html" in results ? results.html : "";
-
-          if ("error" in results) {
-            console.error("Error inlining CSS:", results?.error);
-            log("Error inlining CSS: %o", results?.error);
-            throw results.error;
-          }
-
           const htmlData = Buffer.from(html, "utf-8");
           htmlOutputSize += htmlData.length;
           log(
             "Html difference in bytes +/-: %d",
             htmlData.length - initialSize
           );
-          await writeFile(path, htmlData);
+          await writeFile(htmlFilePath, htmlData);
         }
-        const endTime = Date.now();
+        
         logSummary(htmlInputSize, htmlOutputSize, startTime);
         if (!silent) {
           console.log(
@@ -75,7 +70,7 @@ export default ({
           console.log(
             "🪄 Done: Inlined CSS in %d file(s) in %d sec using options: %o",
             fileCount,
-            (endTime - startTime) / 1000,
+            (Date.now() - startTime) / 1000,
             options,
           );
         }
@@ -83,6 +78,15 @@ export default ({
     },
   };
 };
+
+function checkError(results: unknown) {
+  if (results && typeof results === "object" && "error" in results) {
+    console.error("Error inlining CSS:", results?.error);
+    log("Error inlining CSS: %o", results?.error);
+    throw results.error;
+  }
+}
+
 function logSummary(htmlInputSize: number, htmlOutputSize: number, startTime: number) {
   const endTime = Date.now();
   log("HTML input size: %s bytes", htmlInputSize.toLocaleString());
