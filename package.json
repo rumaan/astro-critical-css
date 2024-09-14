@@ -50,5 +50,6 @@
   "bugs": {
     "url": "https://github.com/rumaan/astro-critical-css/issues"
   },
-  "author": "Rumaan K <hey@rumaan.dev>"
+  "author": "Rumaan K <hey@rumaan.dev>",
+  "contributors": ["Dan Levy <dan@danlevy.net>"]
 }
