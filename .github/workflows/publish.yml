@@ -12,7 +12,7 @@ jobs:
       - name: checkout
       # Setup .npmrc file to publish to npm
         uses: actions/checkout@v4
-        
+
       - name: Setup node
         uses: actions/setup-node@v4
         with:
@@ -24,6 +24,6 @@ jobs:
       - name: Build
         run: npm run lib:build
       - name: Publish
-        run: npx can-npm-publish --yes --verbose && npm run publish --provenance --access public || echo "Failed to publish"
+        run: npm run publish --provenance --access public 
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
