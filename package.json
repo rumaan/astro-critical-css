@@ -1,19 +1,17 @@
 {
   "name": "astro-critical-css",
   "description": "Critical css integration for astro to inline above-the-fold css into HTML",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/rumaan/astro-critical-css.git"
-  },
   "homepage": "https://github.com/rumaan/astro-critical-css#readme",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/rumaan/astro-critical-css/issues"
-  },
-  "author": "Rumaan K <hey@rumaan.dev>",
   "type": "module",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "private": false,
+  "exports": {
+    ".": {
+      "types": "./lib/dist/index.d.ts",
+      "import": "./lib/dist/index.js",
+      "require": "./lib/dist/index.cjs"
+    }
+  },
   "main": "./lib/dist/index.js",
   "types": "./lib/dist/index.d.ts",
   "files": [
@@ -28,9 +26,9 @@
     "lib:build": "tsup-node"
   },
   "dependencies": {
-    "@astrojs/vercel": "^3.3.0",
     "astro": "^2.4.4",
-    "critical": "^5.1.1"
+    "critical": "^5.1.1",
+    "debug": "^4.3.7"
   },
   "devDependencies": {
     "fast-glob": "^3.2.12",
@@ -43,11 +41,14 @@
     "astro",
     "astro-integration"
   ],
-  "exports": {
-    ".": {
-      "types": "./lib/dist/index.d.ts",
-      "import": "./lib/dist/index.js",
-      "require": "./lib/dist/index.cjs"
-    }
-  }
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rumaan/astro-critical-css.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rumaan/astro-critical-css/issues"
+  },
+  "author": "Rumaan K <hey@rumaan.dev>",
+  "contributors": ["Dan Levy <dan@danlevy.net>"]
 }
