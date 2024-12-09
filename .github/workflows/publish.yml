@@ -22,6 +22,6 @@ jobs:
       - name: Build
         run: npm run lib:build
       - name: Publish
-        run: npm run publish --provenance --access public 
+        run: npm publish --provenance --access public 
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
