@@ -44,6 +44,10 @@ If you need options, `criticalCSS` supports the following config options:
 criticalCSS({
   /** Silence log output (plugin specific, everything else is for criticalCSS) */
   silent: boolean,
+  /** glob pattern to match html files, use this to selectively pick html files into which critical css will be inlined (ex: just the home page excluding nested pages).
+   * By default, all html files in the dist directory will be inlined.
+   */
+  htmlPathRegex: string,
   /* HTML source to operate against */
   html: string,
   /* Array of CSS file paths, file globs, Vinyl objects, or source CSS strings */

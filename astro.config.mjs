@@ -8,6 +8,7 @@ export default defineConfig({
   output: 'static',
   integrations: [criticalCSS({
     // silent: true,
+    // htmlPathRegex: "**/test.html",
     height: 1080,
     width: 1920,
   })],

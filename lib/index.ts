@@ -15,12 +15,18 @@ export type PluginOptions = Omit<
 > & {
   /** silence console output */
   silent?: boolean;
+  /** glob pattern to match html files, use this to selectively pick html files into which critical css will be inlined (ex: just the home page excluding nested pages).
+   * By default, all html files in the dist directory will be inlined.
+   */
+  htmlPathRegex?: string;
 };
 
-export default ({
-  silent,
-  ...options
-}: Partial<PluginOptions> | undefined = {}): AstroIntegration => {
+export default (pluginOptions: Partial<PluginOptions> | undefined = {}): AstroIntegration => {
+  const {
+    silent,
+    htmlPathRegex = "**/*.html",
+    ...options
+  } = pluginOptions;
   log("Options: %o", options);
   return {
     name: "critical-css",
@@ -30,7 +36,7 @@ export default ({
         let htmlOutputSize = 0;
         let fileCount = 0;
         const distPath = fileURLToPath(dir);
-        const htmlPathsStream = fg.stream("**/*.html", { cwd: distPath });
+        const htmlPathsStream = fg.stream(htmlPathRegex, { cwd: distPath });
         const startTime = Date.now();
         log("🪄 Starting: Inlining CSS in path %s", distPath);
         for await (const htmlPath of htmlPathsStream) {
@@ -58,7 +64,7 @@ export default ({
           );
           await writeFile(htmlFilePath, htmlData);
         }
-        
+
         logSummary(htmlInputSize, htmlOutputSize, startTime);
         if (!silent) {
           console.log(
@@ -71,7 +77,7 @@ export default ({
             "🪄 Done: Inlined CSS in %d file(s) in %d sec using options: %o",
             fileCount,
             (Date.now() - startTime) / 1000,
-            options,
+            pluginOptions,
           );
         }
       },

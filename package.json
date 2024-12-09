@@ -3,7 +3,7 @@
   "description": "Critical css integration for astro to inline above-the-fold css into HTML",
   "homepage": "https://github.com/rumaan/astro-critical-css#readme",
   "type": "module",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "private": false,
   "exports": {
     ".": {
