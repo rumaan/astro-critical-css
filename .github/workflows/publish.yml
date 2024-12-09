@@ -1,0 +1,29 @@
+name: Publish to npm.js
+on:
+  release:
+    types: [published]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: checkout
+      # Setup .npmrc file to publish to npm
+        uses: actions/checkout@v4
+        
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+          registry-url: 'https://registry.npmjs.org/'
+      
+      - name: Install dependencies
+        run: npm ci
+      - name: Build
+        run: npm run lib:build
+      - name: Publish
+        run: npx can-npm-publish --yes --verbose && npm run publish --provenance --access public || echo "Failed to publish"
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
