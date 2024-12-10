@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import { statSync } from "node:fs";
 import { join } from "node:path";
 import { generate, type GenerateFuncArgs } from "critical";
-import * as fg from "fast-glob";
+import fg from "fast-glob";
 import { writeFile } from "node:fs/promises";
 import debug from "debug";
 

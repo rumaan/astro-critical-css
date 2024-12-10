@@ -3,7 +3,7 @@
   "description": "Critical css integration for astro to inline above-the-fold css into HTML",
   "homepage": "https://github.com/rumaan/astro-critical-css#readme",
   "type": "module",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "private": false,
   "exports": {
     ".": {
@@ -26,13 +26,13 @@
     "lib:build": "tsup-node"
   },
   "dependencies": {
-    "astro": "^2.4.4",
-    "critical": "^5.1.1",
-    "debug": "^4.3.7"
+    "astro": "^5.0.4",
+    "critical": "^7.2.1",
+    "debug": "^4.4.0"
   },
   "devDependencies": {
-    "fast-glob": "^3.2.12",
-    "tsup": "^6.7.0"
+    "fast-glob": "^3.3.2",
+    "tsup": "^8.3.5"
   },
   "keywords": [
     "astro-component",
