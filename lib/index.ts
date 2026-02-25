@@ -15,8 +15,13 @@ export type PluginOptions = Omit<
 > & {
   /** silence console output */
   silent?: boolean;
-  /** glob pattern to match html files, use this to selectively pick html files into which critical css will be inlined (ex: just the home page excluding nested pages).
-   * By default, all html files in the dist directory will be inlined.
+  /** Glob pattern to match HTML files. Use this to selectively pick HTML files
+   * for critical CSS inlining (e.g., just the home page excluding nested pages).
+   * By default, all HTML files in the dist directory will be inlined.
+   */
+  htmlPathGlob?: string;
+  /**
+   * @deprecated Use `htmlPathGlob` instead. This option accepts a glob pattern, not a regex.
    */
   htmlPathRegex?: string;
 };
@@ -24,9 +29,19 @@ export type PluginOptions = Omit<
 export default (pluginOptions: Partial<PluginOptions> | undefined = {}): AstroIntegration => {
   const {
     silent,
-    htmlPathRegex = "**/*.html",
+    htmlPathGlob,
+    htmlPathRegex,
     ...options
   } = pluginOptions;
+
+  const htmlGlobPattern = htmlPathGlob ?? htmlPathRegex ?? "**/*.html";
+
+  if (htmlPathRegex !== undefined) {
+    log("⚠️ 'htmlPathRegex' is deprecated. Use 'htmlPathGlob' instead.");
+    if (!silent) {
+      console.warn("astro-critical-css: 'htmlPathRegex' is deprecated. Use 'htmlPathGlob' instead.");
+    }
+  }
   log("Options: %o", options);
   return {
     name: "critical-css",
@@ -36,7 +51,7 @@ export default (pluginOptions: Partial<PluginOptions> | undefined = {}): AstroIn
         let htmlOutputSize = 0;
         let fileCount = 0;
         const distPath = fileURLToPath(dir);
-        const htmlPathsStream = fg.stream(htmlPathRegex, { cwd: distPath });
+        const htmlPathsStream = fg.stream(htmlGlobPattern, { cwd: distPath });
         const startTime = Date.now();
         log("🪄 Starting: Inlining CSS in path %s", distPath);
         for await (const htmlPath of htmlPathsStream) {
@@ -55,7 +70,14 @@ export default (pluginOptions: Partial<PluginOptions> | undefined = {}): AstroIn
 
           checkError(results);
 
-          let html = "html" in results ? results.html : "";
+          const html = "html" in results ? (results as { html: string }).html : "";
+
+          if (!html) {
+            log("Skipping write for %s: empty HTML result", htmlFilePath);
+            if (!silent) console.warn("⚠️ Skipping write for", htmlFilePath, "- empty HTML result");
+            continue;
+          }
+
           const htmlData = Buffer.from(html, "utf-8");
           htmlOutputSize += htmlData.length;
           log(
@@ -87,9 +109,12 @@ export default (pluginOptions: Partial<PluginOptions> | undefined = {}): AstroIn
 
 function checkError(results: unknown) {
   if (results && typeof results === "object" && "error" in results) {
-    console.error("Error inlining CSS:", results?.error);
-    log("Error inlining CSS: %o", results?.error);
-    throw results.error;
+    const error = (results as Record<string, unknown>).error;
+    console.error("Error inlining CSS:", error);
+    log("Error inlining CSS: %o", error);
+    throw error instanceof Error
+      ? error
+      : new Error(String(error ?? "Unknown critical CSS error"));
   }
 }
 
@@ -101,7 +126,6 @@ function logSummary(htmlInputSize: number, htmlOutputSize: number, startTime: nu
     "HTML difference in bytes +/-: %s",
     (htmlOutputSize - htmlInputSize).toLocaleString()
   );
-  log("✅ Done: Inlining CSS in %d sec.", endTime - startTime);
-  return endTime;
+  log("✅ Done: Inlining CSS in %d sec.", (endTime - startTime) / 1000);
 }
 
